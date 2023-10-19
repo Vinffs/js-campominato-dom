@@ -14,9 +14,11 @@ function mineSweeper() {
   // variables
   let numCells, checkedOption;
 
-  //  number of bombs and new set (shall turn into an array in bombGenerator Function) 
+  //  number of bombs and new set 
   const bombs = 16;
-  let bombPlacement = new Set();
+  let bombPlacement = new Set(); // shall turn into an array in bombGenerator Function
+  // convert set to array
+  let bombPlacementArray; // (new Array of bombs) 
 
 
   // Click function to select game difficulty
@@ -65,6 +67,9 @@ function mineSweeper() {
     squareBox.classList.remove('d-none');
     squareBox.innerHTML = index + 1;
 
+    // attributes different bgColor if bomb or safe slot
+
+
 
     // On click, reset user's input
     menuBtn.addEventListener('click', function () {
@@ -84,11 +89,8 @@ function mineSweeper() {
       const randomNum = getRndInteger(1, numCells);
       bombPlacement.add(randomNum);
     }
-
-    // convert set to array
-    const bombPlacementArray = Array.from(bombPlacement);
+    bombPlacementArray = Array.from(bombPlacement);
     console.log(bombPlacementArray);
-
   }
 
 
