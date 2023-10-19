@@ -54,7 +54,7 @@ function mineSweeper() {
   // Function that creates the squares (from loop above)
   function squareGenerator(index) {
     const squareBox = document.createElement('div');
-    squareContentDim(squareBox);
+    squareContentDimension(squareBox);
     // On Click, the square changes it's classes (add bg & text color, etc..)
     squareBox.addEventListener('click', function () {
       squareBox.classList.add('text-black');
@@ -63,6 +63,9 @@ function mineSweeper() {
       // attributes different bgColor if bomb or safe slot
       if (bombPlacementArray.includes(parseInt(this.innerHTML))) {
         squareBox.classList.add('bg-danger');
+        squareBox.innerHTML = `<i class="fa-solid fa-bomb fa-beat"></i>`;
+        document.querySelector('audio').play();
+
       } else {
         squareBox.classList.add('bg-info');
       }
@@ -70,7 +73,7 @@ function mineSweeper() {
     })
 
     // function that generates square's width / height + other classes
-    function squareContentDim(squareBox) {
+    function squareContentDimension(squareBox) {
       squareBox.style.width = squareBox.style.height = `calc(100% / ${Math.sqrt(numCells)}`;
       squareBox.classList.add('square', 'text-white');
       squareBox.classList.remove('d-none');
