@@ -1,3 +1,4 @@
+
 mineSweeper();
 function mineSweeper() {
 
@@ -14,7 +15,7 @@ function mineSweeper() {
   const result = document.getElementById('message');
 
   // variables
-  let numCells, checkedOption;
+  let numCells, checkedOption, maxScore, squareContainer;
 
   //  number of bombs and new set 
   const bombs = 16;
@@ -23,6 +24,8 @@ function mineSweeper() {
   let bombPlacementArray; // = bombPlacement set into an array
 
   let counter = 0;
+  let gameOver;
+
 
 
   // Click function to select game difficulty
@@ -33,6 +36,7 @@ function mineSweeper() {
 
   // Click function to start the game once chosen the difficulty
   btn.addEventListener('click', function () {
+    gameOver = false;
     offCanvas.style.width = '0px';
     menuBtn.classList.remove('d-none');
     alert.innerHTML = '';
@@ -41,6 +45,8 @@ function mineSweeper() {
     checkedOption = document.querySelector('input[type=radio]:checked');
     if (checkedOption !== null) {
       numCells = checkedOption.value;
+      maxScore = numCells - bombs;
+      console.log(maxScore);
       bombGenerator(numCells);
       // points(numCells, bombs);
     }
@@ -61,25 +67,35 @@ function mineSweeper() {
     const squareBox = document.createElement('div');
     squareContentDimension(squareBox);
     // On Click, the square changes it's classes (add bg & text color, etc..)
-    squareBox.addEventListener('click', function () {
-      squareBox.classList.add('text-black');
-      squareBox.classList.remove('text-white');
-      console.log(parseInt(this.innerHTML));
+    squareBox.addEventListener('click', function clickBox() {
       // attributes different bgColor if bomb or safe slot
-      if (bombPlacementArray.includes(parseInt(this.innerHTML))) {
-        squareBox.classList.add('bg-danger');
-        squareBox.innerHTML = `<i class="fa-solid fa-bomb fa-beat"></i>`;
-        document.querySelector('audio').play();
-        result.classList.remove('d-none');
-        result.innerHTML = `<h3>Hai perso!</h3>`;
+      if (!gameOver) {
+        if (bombPlacementArray.includes(parseInt(this.innerHTML))) {
+          squareBox.classList.add('bg-danger');
+          squareBox.classList.add('text-black');
+          squareBox.classList.remove('text-white');
+          squareBox.innerHTML = `<i class="fa-solid fa-bomb fa-beat"></i>`;
+          document.querySelector('audio').play();
+          gameOver = true;
+          gameStatus(squareBox);
 
+        } else {
+          squareBox.classList.add('bg-info');
+          counter++;
+          points.classList.remove('d-none');
+          points.innerHTML = `<h4>Punteggio: ${counter}</h4>`;
+          squareBox.classList.add('text-black');
+          squareBox.classList.remove('text-white');
+          squareBox.removeEventListener('click', clickBox);
+          console.log(parseInt(this.innerHTML));
+          if (maxScore === counter) {
+            gameStatus(squareBox);
+          }
+        }
       } else {
-        squareBox.classList.add('bg-info');
-        counter++;
-        points.classList.remove('d-none');
-        points.innerHTML = `<h4>Punteggio: ${counter}</h4>`
-        console.log(counter);
+        squareBox.removeEventListener('click', clickBox);
       }
+
     })
 
     // function that generates square's width / height + other classes
@@ -96,11 +112,16 @@ function mineSweeper() {
     menuBtn.addEventListener('click', function () {
       btn.classList.remove('d-none');
       menuBtn.classList.add('d-none');
-      squareBox.classList.add('d-none');
       result.classList.add('d-none');
       points.classList.add('d-none');
       offCanvas.style.width = '400px';
       checkedOption.checked = false;
+      bombPlacement = new Set();
+      counter = 0;
+
+      while (playground.firstChild) {
+        playground.removeChild(playground.firstChild);
+      }
     })
 
 
@@ -117,12 +138,29 @@ function mineSweeper() {
     console.log(bombPlacementArray);
   }
 
-  // function that defines max score and stacks player's points
-  // function points(numCells, bombs) {
-  //   let maxScore = numCells - bombs;
-  //   console.log(maxScore);
-  // }
-  // console.log(counter);
-
+  // function that defines max score
+  function gameStatus(squareBox) {
+    squareContainer = playground.childNodes;
+    console.log(squareContainer);
+    for (let i = 0; i < squareContainer.length; i++) {
+      if (bombPlacementArray.includes(i + 1)) {
+        squareContainer[i].classList.add('bg-danger');
+        squareContainer[i].classList.add('text-black');
+        squareContainer[i].classList.remove('text-white');
+        squareContainer[i].innerHTML = `<i class="fa-solid fa-bomb fa-beat"></i>`;
+      }
+    }
+    if (gameOver && counter < maxScore) {
+      squareBox.classList.add('bg-danger');
+      squareBox.classList.add('text-black');
+      squareBox.classList.remove('text-white');
+      squareBox.innerHTML = `<i class="fa-solid fa-bomb fa-beat"></i>`;
+      result.classList.remove('d-none');
+      result.innerHTML = `<h3>Hai perso!</h3>`;
+    } else {
+      result.classList.remove('d-none');
+      result.innerHTML = `<h3>Hai Vinto!</h3>`;
+    }
+  }
 
 }
