@@ -10,6 +10,8 @@ function mineSweeper() {
   const playground = document.querySelector('.playground');
   const offCanvas = document.getElementById("offCanvas");
   const alert = document.querySelector('.alert');
+  const points = document.getElementById('counter');
+  const result = document.getElementById('message');
 
   // variables
   let numCells, checkedOption;
@@ -19,6 +21,8 @@ function mineSweeper() {
   let bombPlacement = new Set(); // shall turn into an array in bombGenerator Function
   // convert set to array
   let bombPlacementArray; // = bombPlacement set into an array
+
+  let counter = 0;
 
 
   // Click function to select game difficulty
@@ -38,6 +42,7 @@ function mineSweeper() {
     if (checkedOption !== null) {
       numCells = checkedOption.value;
       bombGenerator(numCells);
+      // points(numCells, bombs);
     }
     else {
       alert.innerHTML = `You must choose a difficulty.`;
@@ -65,11 +70,16 @@ function mineSweeper() {
         squareBox.classList.add('bg-danger');
         squareBox.innerHTML = `<i class="fa-solid fa-bomb fa-beat"></i>`;
         document.querySelector('audio').play();
+        result.classList.remove('d-none');
+        result.innerHTML = `<h3>Hai perso!</h3>`;
 
       } else {
         squareBox.classList.add('bg-info');
+        counter++;
+        points.classList.remove('d-none');
+        points.innerHTML = `<h4>Punteggio: ${counter}</h4>`
+        console.log(counter);
       }
-
     })
 
     // function that generates square's width / height + other classes
@@ -87,9 +97,12 @@ function mineSweeper() {
       btn.classList.remove('d-none');
       menuBtn.classList.add('d-none');
       squareBox.classList.add('d-none');
+      result.classList.add('d-none');
+      points.classList.add('d-none');
       offCanvas.style.width = '400px';
       checkedOption.checked = false;
     })
+
 
     return squareBox;
   }
@@ -103,6 +116,13 @@ function mineSweeper() {
     bombPlacementArray = Array.from(bombPlacement);
     console.log(bombPlacementArray);
   }
+
+  // function that defines max score and stacks player's points
+  // function points(numCells, bombs) {
+  //   let maxScore = numCells - bombs;
+  //   console.log(maxScore);
+  // }
+  // console.log(counter);
 
 
 }
