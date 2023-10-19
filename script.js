@@ -18,7 +18,7 @@ function mineSweeper() {
   const bombs = 16;
   let bombPlacement = new Set(); // shall turn into an array in bombGenerator Function
   // convert set to array
-  let bombPlacementArray; // (new Array of bombs) 
+  let bombPlacementArray; // = bombPlacement set into an array
 
 
   // Click function to select game difficulty
@@ -54,20 +54,28 @@ function mineSweeper() {
   // Function that creates the squares (from loop above)
   function squareGenerator(index) {
     const squareBox = document.createElement('div');
+    squareContentDim(squareBox);
     // On Click, the square changes it's classes (add bg & text color, etc..)
     squareBox.addEventListener('click', function () {
-      squareBox.classList.add('bg-info', 'text-black');
+      squareBox.classList.add('text-black');
       squareBox.classList.remove('text-white');
-      console.log(parseInt(squareBox.innerHTML));
+      console.log(parseInt(this.innerHTML));
+      // attributes different bgColor if bomb or safe slot
+      if (bombPlacementArray.includes(parseInt(this.innerHTML))) {
+        squareBox.classList.add('bg-danger');
+      } else {
+        squareBox.classList.add('bg-info');
+      }
+
     })
 
-    // Gives square it's width / height and other classes
-    squareBox.style.width = squareBox.style.height = `calc(100% / ${Math.sqrt(numCells)}`;
-    squareBox.classList.add('square', 'text-white');
-    squareBox.classList.remove('d-none');
-    squareBox.innerHTML = index + 1;
-
-    // attributes different bgColor if bomb or safe slot
+    // function that generates square's width / height + other classes
+    function squareContentDim(squareBox) {
+      squareBox.style.width = squareBox.style.height = `calc(100% / ${Math.sqrt(numCells)}`;
+      squareBox.classList.add('square', 'text-white');
+      squareBox.classList.remove('d-none');
+      squareBox.innerHTML = index + 1;
+    }
 
 
 
