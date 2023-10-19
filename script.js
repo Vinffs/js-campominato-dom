@@ -14,6 +14,11 @@ function mineSweeper() {
   // variables
   let numCells, checkedOption;
 
+  //  number of bombs and new set (shall turn into an array in bombGenerator Function) 
+  const bombs = 16;
+  let bombPlacement = new Set();
+
+
   // Click function to select game difficulty
   choose.addEventListener('click', function () {
     offCanvas.style.width = '400px';
@@ -30,6 +35,7 @@ function mineSweeper() {
     checkedOption = document.querySelector('input[type=radio]:checked');
     if (checkedOption !== null) {
       numCells = checkedOption.value;
+      bombGenerator(numCells);
     }
     else {
       alert.innerHTML = `You must choose a difficulty.`;
@@ -41,7 +47,6 @@ function mineSweeper() {
       let squareNum = squareGenerator(i);
       playground.append(squareNum);
     }
-
   })
 
   // Function that creates the squares (from loop above)
@@ -60,6 +65,7 @@ function mineSweeper() {
     squareBox.classList.remove('d-none');
     squareBox.innerHTML = index + 1;
 
+
     // On click, reset user's input
     menuBtn.addEventListener('click', function () {
       btn.classList.remove('d-none');
@@ -71,5 +77,19 @@ function mineSweeper() {
 
     return squareBox;
   }
+
+  // function that generates an array of random 16 numbers a.k.a. bombs
+  function bombGenerator(numCells) {
+    while (bombPlacement.size < bombs) {
+      const randomNum = getRndInteger(1, numCells);
+      bombPlacement.add(randomNum);
+    }
+
+    // convert set to array
+    const bombPlacementArray = Array.from(bombPlacement);
+    console.log(bombPlacementArray);
+
+  }
+
 
 }
